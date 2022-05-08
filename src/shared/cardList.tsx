@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useStore } from "effector-react";
 import { $data, $isLoading, onFetchLoadingStarted } from "./cardList.model";
-import { Card } from "../molecules/card";
+import { Card } from "../ui/card/card";
 
 export const CardList: FC = () => {
     const isLoading = useStore($isLoading);
@@ -22,7 +22,6 @@ export const CardList: FC = () => {
             justifyContent: 'center',
             alignItems: 'center'
         }}>
-            {/*<input placeholder='не работает' style={{ margin: '40px 0 0 0', width:'300px', height:'50px' }} type="text"/>*/}
             <button onClick={handleFilter} style={{ margin: '40px', width:'300px', height:'50px' }}>{!isFiltered ? 'ПОКАЗАТЬ КАРТОЧКИ С ЛАЙКАМИ' : 'ПОКАЗАТЬ ВСЕ'}</button>
             {data?.map((card) => (
                 <Card key={card.id}
