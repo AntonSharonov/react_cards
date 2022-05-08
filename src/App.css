@@ -1,38 +1,107 @@
 .App {
-  text-align: center;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+p, h2 {
+    margin: 10px !important;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* Базовые стили */
+.heart {
+    margin: 0 10px 5px 0;
+    position: relative;
+    width: 12px;
+    height: 22px;
+    box-shadow: none;
+    -webkit-border-radius: 6px 6px 0 0;
+    -moz-border-radius: 6px 6px 0 0;
+    border-radius: 6px 6px 0 0;
+    /* Определяем угол наклона */
+    /*-webkit-transform: rotate(315deg);*/
+    /*-moz-transform: rotate(315deg);*/
+    -ms-transform: rotate(315deg);
+    /*-o-transform: rotate(315deg);*/
+    transform: rotate(315deg);
+    border: none;
+    outline: none;
+}
+
+/* Формируем правую часть */
+.heart:before {
+    position: absolute;
+    width: 22px;
+    height: 12px;
+    left: 0;
+    bottom: 0;
+    content: "";
+    box-shadow: none;
+    -webkit-border-radius: 6px 6px 0 0;
+    -moz-border-radius: 6px 6px 0 0;
+    border-radius: 0 6px 6px 0;
+}
+
+/* Убираем тень при наведении */
+
+.heart:hover {
+    box-shadow: -1px 0 2px #444;
+}
+
+.heart:hover:before {
+    box-shadow: 0 3px 3px #444;
+}
+
+.heartRed {
+    background-color: red;
+}
+
+.heartRed:before {
+    background-color: red;
+}
+
+.heartWhite {
+    background-color: lightgray;
+}
+
+.heartWhite:before {
+    background-color: lightgray;
 }
