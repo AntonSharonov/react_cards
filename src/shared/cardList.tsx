@@ -2,6 +2,8 @@ import { FC, useEffect, useState } from "react";
 import { useStore } from "effector-react";
 import { $data, $isLoading, onFetchLoadingStarted } from "./cardList.model";
 import { Card } from "../ui/card/card";
+import styled from "styled-components";
+import { Button } from "../ui/button";
 
 export const CardList: FC = () => {
     const isLoading = useStore($isLoading);
@@ -15,14 +17,9 @@ export const CardList: FC = () => {
     }, [])
 
     return (
-        <div style={{
-            display: "flex",
-            flexDirection: 'column',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
-            <button onClick={handleFilter} style={{ margin: '40px', width:'300px', height:'50px' }}>{!isFiltered ? 'ПОКАЗАТЬ КАРТОЧКИ С ЛАЙКАМИ' : 'ПОКАЗАТЬ ВСЕ'}</button>
+        <SCardList>
+            <Button onClick={handleFilter} text={!isFiltered ? 'ПОКАЗАТЬ КАРТОЧКИ С ЛАЙКАМИ' : 'ПОКАЗАТЬ ВСЕ'}/>
+
             {data?.map((card) => (
                 <Card key={card.id}
                       isLoading={isLoading}
@@ -31,9 +28,17 @@ export const CardList: FC = () => {
                       imageUrl={card.image_url}
                       tagline={card.tagline}
                       isFiltered={isFiltered}
-                />
-            ))
+                />))
             }
-        </div>
+        </SCardList>
+
     )
 }
+
+const SCardList = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`;

@@ -1,12 +1,13 @@
 import { FC, useState } from "react";
+import styled from "styled-components";
+import { DEFAULT_IMG_SRC } from "../../assets/const";
 import { Image } from "../image";
 import { Title } from "../title";
 import { Paragraph } from "../paragraph";
 import { Button } from "../button";
 import { LikeButton } from "../likeButton";
-import styled from "styled-components";
 import { Loader } from "../loader";
-import { DEFAULT_IMG_SRC } from "../../assets/const";
+import { Checkbox } from "../checkbox";
 
 interface ICard {
     isLoading: boolean;
@@ -24,6 +25,9 @@ export const Card: FC<ICard> = ({ isLoading, name, date, imageUrl, tagline, isFi
     const [isRemoved, setRemoved] = useState(false);
     const removeClickHandler = () => setRemoved(display => !display);
 
+    const [isChecked, setChecked] = useState(false);
+    const checkboxClickHandler = () => setChecked(checked => !checked);
+
     const isHidden = isRemoved || (isFiltered && !isLiked);
 
     if (isLoading) return (
@@ -34,12 +38,13 @@ export const Card: FC<ICard> = ({ isLoading, name, date, imageUrl, tagline, isFi
 
     return (
         <SCard data-ishidden={isHidden}>
-            <Image src={imageUrl || DEFAULT_IMG_SRC} height='140px' alt={name || ''}/>
-            <Title text={name || ''}/>
-            <Paragraph text={date || ''}/>
-            <Paragraph text={tagline || ''}/>
-            <LikeButton isLiked={isLiked} onClick={likeClickHandler}/>
-            <Button text='Remove' onClick={removeClickHandler}/>
+            <SCell data-size='small'><Checkbox isChecked={isChecked} onClick={checkboxClickHandler}/></SCell>
+            <SCell data-size='small'><Image src={imageUrl || DEFAULT_IMG_SRC} height='140px' alt={name || ''}/></SCell>
+            <SCell data-size='large'><Title text={name || ''}/></SCell>
+            <SCell data-size='small'><Paragraph text={date || ''}/></SCell>
+            <SCell data-size='large'><Paragraph text={tagline || ''}/></SCell>
+            <SCell data-size='small'><LikeButton isLiked={isLiked} onClick={likeClickHandler}/></SCell>
+            <SCell data-size='small'><Button text='Remove' onClick={removeClickHandler}/></SCell>
         </SCard>
     )
 }
@@ -58,5 +63,24 @@ const SCard = styled.div`
 
   &[data-ishidden='true'] {
     display: none;
+  }
+`;
+
+const SCell = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 2;
+
+  &[data-size='small'] {
+    flex: 1;
+  }
+
+  &[data-size='medium'] {
+    flex: 3;
+  }
+
+  &[data-size='large'] {
+    flex: 4;
   }
 `;

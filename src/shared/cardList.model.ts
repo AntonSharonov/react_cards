@@ -9,15 +9,12 @@ export const onRemoved = createEvent();
 $isLiked.on(onLikeChanged, (store) => !store);
 $isRemoved.on(onRemoved, (store) => !store);
 
-
 $isLiked.watch((data) => console.log(data));
 $isRemoved.watch((data) => console.log(data));
 
-
 export const onFetchedFx = createEffect(async () => {
-    const url = 'https://api.punkapi.com/v2/beers?page=2&per_page=40';
-    const res = await fetch(url);
-    return res.json();
+    const res = await fetch(`${process.env.REACT_APP_PUNK_API_URL}`);
+    return await res.json();
 })
 
 // export const $imgSrc = createStore<string | null>(null);
@@ -50,16 +47,3 @@ forward({
     from: onFetchedFx.doneData,
     to: onFetchLoadingFinished,
 })
-
-
-// const $card = combine($isLiked, $isRemoved, $imgSrc, $name, $date, $tagline, (isLiked, isRemoved, imgSrc, name, date, tagline) => ({
-//     isLiked,
-//     isRemoved,
-//     imgSrc,
-//     name,
-//     date,
-//     tagline
-// }))
-//
-// $card.watch(data => console.log(data));
-
