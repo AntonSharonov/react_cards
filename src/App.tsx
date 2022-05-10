@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import { CardList } from "./shared/cardList";
+import { ProductCardsSection } from "./shared/productCards/productCardsSection";
 
 function App() {
     return (
         <div className="App">
-            <CardList/>
+            <ProductCardsSection/>
         </div>
     );
 }

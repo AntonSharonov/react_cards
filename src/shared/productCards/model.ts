@@ -1,13 +1,13 @@
 import { createEffect, createEvent, createStore, forward } from "effector";
 
-type Data = [{ id: string, image_url: string, name: string, first_brewed: string, tagline: string }];
+type Card = { id: string, image_url: string, name: string, first_brewed: string, tagline: string };
+type Data = [Card];
 
 export const $data = createStore<Data>([{ id: '', image_url: '', name: '', first_brewed: '', tagline: '' }]);
 
-export const $isLiked = createStore<boolean>(false);
-export const $isHidden = createStore<boolean>(false);
 export const $isLoading = createStore<boolean>(false);
-export const $isChecked = createStore<boolean>(false);
+export const $isFiltered = createStore<boolean>(false);
+export const $inputSearch = createStore<string>('');
 
 export const onFetchedFx = createEffect(async () => {
     const res = await fetch(`${process.env.REACT_APP_PUNK_API_URL}`);
@@ -16,16 +16,14 @@ export const onFetchedFx = createEffect(async () => {
 
 export const onFetchLoadingStarted = createEvent();
 export const onFetchLoadingFinished = createEvent();
+export const onFilterChanged = createEvent();
+export const onFilterReset = createEvent();
+export const onInputSearched = createEvent<string>();
+export const onSearchReset = createEvent();
 
-export const onLikeToggled = createEvent();
-export const onLikeReset = createEvent();
-export const onHideToggled = createEvent();
-export const onHideReset = createEvent();
-export const onCheckToggled = createEvent();
-export const onCheckReset = createEvent();
 
 $data.on(onFetchedFx.doneData, (_, data) => {
-    return data.map((card: { id: string; image_url: string; name: string; first_brewed: string; tagline: string; }) => {
+    return data.map((card: Card) => {
         return {
             id: card.id,
             image_url: card.image_url,
@@ -36,12 +34,9 @@ $data.on(onFetchedFx.doneData, (_, data) => {
     })
 });
 
-$isLiked.on(onLikeToggled, (store) => !store).reset(onLikeReset);
-$isHidden.on(onHideToggled, (store) => !store).reset(onHideReset);
 $isLoading.on(onFetchLoadingStarted, () => true).reset(onFetchLoadingFinished);
-$isChecked.on(onCheckToggled, (store) => !store).reset(onCheckReset);
-
-$data.watch((data) => console.log('data:', data));
+$isFiltered.on(onFilterChanged, (value) => !value).reset(onFilterReset);
+$inputSearch.on(onInputSearched, (store, value) => value).reset(onSearchReset);
 
 forward({
     from: onFetchLoadingStarted,

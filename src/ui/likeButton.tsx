@@ -44,6 +44,6 @@ const SLikeButton = styled.button`
   }
 
   &[data-isliked='true'], &[data-isliked='true']:before {
-    background-color: red;
+    background-color: #ef413c;
   }
 `;
