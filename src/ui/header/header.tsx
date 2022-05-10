@@ -10,6 +10,8 @@ import {
 } from "../../shared/productCards/model";
 import { useStore } from "effector-react";
 import { Input } from "../input";
+import { Paragraph } from "../paragraph";
+import { Title } from "../title";
 
 export const Header: FC = () => {
     const isFiltered = useStore($isFiltered);
@@ -19,11 +21,17 @@ export const Header: FC = () => {
     return (
         <SHeader>
             <SRow>
+                <Title text='0'/>
+                <Paragraph text='items selected'/>
+                <Button isDisable={true} onClick={() => onSearchReset()} text='Select all'/>
+                <Button isDisable={true} onClick={() => onSearchReset()} text='Like selected'/>
+                <Button isDisable={true} onClick={() => onSearchReset()} text='Remove selected'/>
                 <Input value={searchValue}
                        onChange={() => onInputSearched(inputRef.current?.value || '')}
                        ref={inputRef}/>
                 <Button onClick={() => onSearchReset()} text='Clear search bar'/>
                 <Button onClick={() => onFilterChanged()} isActive={isFiltered} text='FILTER: by likes'/>
+                <Button isDisable={true} onClick={() => onSearchReset()} text='Reset to default'/>
             </SRow>
         </SHeader>
     )

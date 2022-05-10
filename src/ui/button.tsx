@@ -5,10 +5,11 @@ interface IButton {
     text: string;
     onClick: MouseEventHandler;
     isActive?: boolean;
+    isDisable?: boolean;
 }
 
-export const Button: FC<IButton> = ({ text, onClick, isActive }) => (
-    <SButton data-active={isActive} onClick={onClick}>{text}</SButton>
+export const Button: FC<IButton> = ({ text, onClick, isActive, isDisable }) => (
+    <SButton data-active={isActive} disabled={isDisable} onClick={onClick}>{text}</SButton>
 )
 
 const SButton = styled.button`
@@ -27,5 +28,10 @@ const SButton = styled.button`
 
   &[data-active='true'] {
     background-color: #e0e0e0;
+  }
+
+  &[disabled], &[disabled]:hover {
+    cursor: not-allowed;
+    background-color: #fff;
   }
 `;
