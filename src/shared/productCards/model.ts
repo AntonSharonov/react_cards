@@ -1,6 +1,7 @@
 import { createEffect, createEvent, createStore, forward } from "effector";
 
-type Data = [{ id: string, image_url: string, name: string, first_brewed: string, tagline: string }];
+type Card = { id: string, image_url: string, name: string, first_brewed: string, tagline: string };
+type Data = [Card];
 
 export const $data = createStore<Data>([{ id: '', image_url: '', name: '', first_brewed: '', tagline: '' }]);
 
@@ -22,7 +23,7 @@ export const onSearchReset = createEvent();
 
 
 $data.on(onFetchedFx.doneData, (_, data) => {
-    return data.map((card: { id: string; image_url: string; name: string; first_brewed: string; tagline: string; }) => {
+    return data.map((card: Card) => {
         return {
             id: card.id,
             image_url: card.image_url,

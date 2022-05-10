@@ -83,7 +83,6 @@ const SCard = styled.div`
 
 const SCell = styled.div`
   height: 100%;
-  border: 1px solid #e9eeff;
   background-color: #ffffff;
   border-radius: 8px;
   display: flex;
