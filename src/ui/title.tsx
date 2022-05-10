@@ -8,5 +8,5 @@ interface ITitle {
 export const Title: FC<ITitle> = ({ text }) => <STitle>{text}</STitle>
 
 const STitle = styled.h2`
-  margin: 0;
+  margin: 10px;
 `;

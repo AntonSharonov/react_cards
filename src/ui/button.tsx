@@ -3,11 +3,29 @@ import styled from 'styled-components'
 
 interface IButton {
     text: string;
-    onClick: MouseEventHandler<HTMLButtonElement> | undefined;
+    onClick: MouseEventHandler;
+    isActive?: boolean;
 }
 
-export const Button: FC<IButton> = ({ text, onClick }) => <SButton onClick={onClick}>{text}</SButton>
+export const Button: FC<IButton> = ({ text, onClick, isActive }) => (
+    <SButton data-active={isActive} onClick={onClick}>{text}</SButton>
+)
 
 const SButton = styled.button`
   cursor: pointer;
+  margin: 10px;
+  padding: 0 20px 1px;
+  height: 40px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  &:hover, &[data-active='true']:hover {
+    background-color: #f6f6f6;
+  }
+
+  &[data-active='true'] {
+    background-color: #e0e0e0;
+  }
 `;

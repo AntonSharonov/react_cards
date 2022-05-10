@@ -8,5 +8,5 @@ interface IParagraph {
 export const Paragraph: FC<IParagraph> = ({ text }) => <SParagraph>{text}</SParagraph>
 
 const SParagraph = styled.p`
-  margin: 0;
+  margin: 10px;
 `;
