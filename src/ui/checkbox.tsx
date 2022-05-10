@@ -12,9 +12,9 @@ export const Checkbox: FC<ICheckbox> = ({ isChecked, onClick }) => (
 
 const SCheckbox = styled.input.attrs({ type: "checkbox" })`
   margin: 2px;
+  cursor: pointer;
 
   &[data-checked='true'] {
     color: red;
-
   }
 `;

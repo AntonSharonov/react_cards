@@ -8,4 +8,6 @@ interface IButton {
 
 export const Button: FC<IButton> = ({ text, onClick }) => <SButton onClick={onClick}>{text}</SButton>
 
-const SButton = styled.button``;
+const SButton = styled.button`
+  cursor: pointer;
+`;

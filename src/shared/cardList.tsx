@@ -6,8 +6,8 @@ import styled from "styled-components";
 import { Button } from "../ui/button";
 
 export const CardList: FC = () => {
-    const isLoading = useStore($isLoading);
     const data = useStore($data);
+    const isLoading = useStore($isLoading);
 
     const [isFiltered, filterToggle] = useState(false);
     const handleFilter = () => filterToggle(filter => !filter);
@@ -22,16 +22,16 @@ export const CardList: FC = () => {
 
             {data?.map((card) => (
                 <Card key={card.id}
+                      id={card.id}
                       isLoading={isLoading}
                       name={card.name}
-                      date={card.first_brewed}
+                      firstBrewed={card.first_brewed}
                       imageUrl={card.image_url}
                       tagline={card.tagline}
                       isFiltered={isFiltered}
-                />))
-            }
+                />
+            ))}
         </SCardList>
-
     )
 }
 
@@ -41,4 +41,5 @@ const SCardList = styled.div`
   width: 100%;
   justify-content: center;
   align-items: center;
+  margin: 30px 0;
 `;

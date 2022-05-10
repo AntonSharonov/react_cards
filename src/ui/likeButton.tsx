@@ -11,8 +11,8 @@ export const LikeButton: FC<ILikeButton> = ({ onClick, isLiked }) => (
 )
 
 const SLikeButton = styled.button`
-  background-color: lightgray;
-  margin: 0 10px 5px 0;
+  background-color: #d9d9d9;
+  margin: 0 5px 3px 0;
   position: relative;
   width: 12px;
   height: 22px;
@@ -21,9 +21,10 @@ const SLikeButton = styled.button`
   transform: rotate(315deg);
   border: none;
   outline: none;
+  cursor: pointer;
 
   &:before {
-    background-color: lightgray;
+    background-color: #d9d9d9;
     position: absolute;
     width: 22px;
     height: 12px;
@@ -35,11 +36,11 @@ const SLikeButton = styled.button`
   }
 
   &:hover {
-    box-shadow: -1px 0 2px #444;
+    box-shadow: -1px 0 2px #d9d9d9;
   }
 
   &:hover:before {
-    box-shadow: 0 3px 3px #444;
+    box-shadow: 0 1px 2px #d9d9d9;
   }
 
   &[data-isliked='true'], &[data-isliked='true']:before {

@@ -10,41 +10,52 @@ import { Loader } from "../loader";
 import { Checkbox } from "../checkbox";
 
 interface ICard {
+    id: string;
+    imageUrl: string;
+    name: string;
+    firstBrewed: string;
+    tagline: string;
     isLoading: boolean;
-    name: string | null;
-    date: string | null;
-    imageUrl: string | null;
-    tagline: string | null;
     isFiltered: boolean;
 }
 
-export const Card: FC<ICard> = ({ isLoading, name, date, imageUrl, tagline, isFiltered }) => {
+export const Card: FC<ICard> = (
+    {
+        id,
+        imageUrl,
+        name,
+        firstBrewed,
+        tagline,
+        isLoading,
+        isFiltered,
+    }) => {
     const [isLiked, setLike] = useState(false);
     const likeClickHandler = () => setLike(like => !like);
 
-    const [isRemoved, setRemoved] = useState(false);
-    const removeClickHandler = () => setRemoved(display => !display);
+    const [isHidden, setHidden] = useState(false);
+    const hiddenClickHandler = () => setHidden(display => !display);
 
     const [isChecked, setChecked] = useState(false);
     const checkboxClickHandler = () => setChecked(checked => !checked);
 
-    const isHidden = isRemoved || (isFiltered && !isLiked);
+    const isHide = isHidden || (isFiltered && !isLiked);
 
     if (isLoading) return (
-        <SCard data-ishidden={isHidden}>
+        <SCard data-ishidden={isHide}>
             <Loader text='Loading...'/>
         </SCard>
     )
 
     return (
-        <SCard data-ishidden={isHidden}>
+        <SCard data-ishidden={isHide}>
+            <SCell data-size='small'><Paragraph text={id}/></SCell>
             <SCell data-size='small'><Checkbox isChecked={isChecked} onClick={checkboxClickHandler}/></SCell>
-            <SCell data-size='small'><Image src={imageUrl || DEFAULT_IMG_SRC} height='140px' alt={name || ''}/></SCell>
-            <SCell data-size='large'><Title text={name || ''}/></SCell>
-            <SCell data-size='small'><Paragraph text={date || ''}/></SCell>
-            <SCell data-size='large'><Paragraph text={tagline || ''}/></SCell>
+            <SCell data-size='small'><Image src={imageUrl || DEFAULT_IMG_SRC} height='120px' alt={name}/></SCell>
+            <SCell data-size='large'><Title text={name}/></SCell>
+            <SCell data-size='small'><Paragraph text={firstBrewed}/></SCell>
+            <SCell data-size='large'><Paragraph text={tagline}/></SCell>
             <SCell data-size='small'><LikeButton isLiked={isLiked} onClick={likeClickHandler}/></SCell>
-            <SCell data-size='small'><Button text='Remove' onClick={removeClickHandler}/></SCell>
+            <SCell data-size='small'><Button text='Remove' onClick={hiddenClickHandler}/></SCell>
         </SCard>
     )
 }
@@ -53,12 +64,9 @@ const SCard = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #dbdbdb;
-  border-radius: 10px;
   width: 70%;
   height: 150px;
-  margin: 10px;
-  background-color: #e3faff;
+  margin: 5px;
   display: flex;
 
   &[data-ishidden='true'] {
@@ -67,10 +75,16 @@ const SCard = styled.div`
 `;
 
 const SCell = styled.div`
+  height: 100%;
+  border: 1px solid #e9eeff;
+  background-color: #ffffff;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 2;
+  margin: 3px;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 16%);
 
   &[data-size='small'] {
     flex: 1;
