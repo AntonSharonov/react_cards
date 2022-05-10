@@ -1,13 +1,13 @@
+body {
+    background-color: #f6f6f6;
+}
+
 .App {
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-}
-
-p, h2 {
-    margin: 10px !important;
 }
 
 .App-logo {
@@ -43,65 +43,4 @@ p, h2 {
     to {
         transform: rotate(360deg);
     }
-}
-
-
-/* Базовые стили */
-.heart {
-    margin: 0 10px 5px 0;
-    position: relative;
-    width: 12px;
-    height: 22px;
-    box-shadow: none;
-    -webkit-border-radius: 6px 6px 0 0;
-    -moz-border-radius: 6px 6px 0 0;
-    border-radius: 6px 6px 0 0;
-    /* Определяем угол наклона */
-    /*-webkit-transform: rotate(315deg);*/
-    /*-moz-transform: rotate(315deg);*/
-    -ms-transform: rotate(315deg);
-    /*-o-transform: rotate(315deg);*/
-    transform: rotate(315deg);
-    border: none;
-    outline: none;
-}
-
-/* Формируем правую часть */
-.heart:before {
-    position: absolute;
-    width: 22px;
-    height: 12px;
-    left: 0;
-    bottom: 0;
-    content: "";
-    box-shadow: none;
-    -webkit-border-radius: 6px 6px 0 0;
-    -moz-border-radius: 6px 6px 0 0;
-    border-radius: 0 6px 6px 0;
-}
-
-/* Убираем тень при наведении */
-
-.heart:hover {
-    box-shadow: -1px 0 2px #444;
-}
-
-.heart:hover:before {
-    box-shadow: 0 3px 3px #444;
-}
-
-.heartRed {
-    background-color: red;
-}
-
-.heartRed:before {
-    background-color: red;
-}
-
-.heartWhite {
-    background-color: lightgray;
-}
-
-.heartWhite:before {
-    background-color: lightgray;
 }
