@@ -8,7 +8,7 @@ import { Button } from "../button";
 import { LikeButton } from "../likeButton";
 import { Loader } from "../loader";
 import { Checkbox } from "../checkbox";
-import { $isFiltered, $isLoading } from "../../shared/productCards/model";
+import { $inputSearch, $isFiltered, $isLoading } from "../../shared/productCards/model";
 import { useStore } from "effector-react";
 
 interface ICard {
@@ -31,8 +31,21 @@ export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) =>
 
     const isLoading = useStore($isLoading);
     const isFiltered = useStore($isFiltered);
+    const searchValue = useStore($inputSearch);
 
-    const isHidden = !isDisplay || (isFiltered && !isLiked);
+    const searchInCard = (name: string, tagline: string, firstBrewed: string, searchValue: string): boolean => {
+        return Boolean([name, tagline, firstBrewed].find(val => {
+            return val
+                .replace(/[^a-zа-я\d]/gi, '')
+                .toLowerCase()
+                .indexOf(searchValue
+                    .replace(/[^a-zа-я\d]/gi, '')
+                    .toLowerCase()
+                ) !== -1
+        }))
+    }
+
+    const isHidden = !isDisplay || (isFiltered && !isLiked) || !searchInCard(name, tagline, firstBrewed, searchValue);
 
     if (isLoading) return (
         <SCard data-ishidden={isHidden}>

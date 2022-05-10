@@ -6,6 +6,7 @@ export const $data = createStore<Data>([{ id: '', image_url: '', name: '', first
 
 export const $isLoading = createStore<boolean>(false);
 export const $isFiltered = createStore<boolean>(false);
+export const $inputSearch = createStore<string>('');
 
 export const onFetchedFx = createEffect(async () => {
     const res = await fetch(`${process.env.REACT_APP_PUNK_API_URL}`);
@@ -16,6 +17,8 @@ export const onFetchLoadingStarted = createEvent();
 export const onFetchLoadingFinished = createEvent();
 export const onFilterChanged = createEvent();
 export const onFilterReset = createEvent();
+export const onInputSearched = createEvent<string>();
+export const onSearchReset = createEvent();
 
 
 $data.on(onFetchedFx.doneData, (_, data) => {
@@ -32,6 +35,7 @@ $data.on(onFetchedFx.doneData, (_, data) => {
 
 $isLoading.on(onFetchLoadingStarted, () => true).reset(onFetchLoadingFinished);
 $isFiltered.on(onFilterChanged, (value) => !value).reset(onFilterReset);
+$inputSearch.on(onInputSearched, (store, value) => value).reset(onSearchReset);
 
 forward({
     from: onFetchLoadingStarted,
