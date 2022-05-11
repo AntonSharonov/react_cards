@@ -31,21 +31,18 @@ export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) =>
 
     const isLoading = useStore($isLoading);
     const isFiltered = useStore($isFiltered);
-    const searchValue = useStore($inputSearch);
+    const searchValues = useStore($inputSearch);
 
-    const searchInCard = (name: string, tagline: string, firstBrewed: string, searchValue: string): boolean => {
-        return Boolean([name, tagline, firstBrewed].find(val => {
-            return val
-                .replace(/[^a-zа-я\d]/gi, '')
-                .toLowerCase()
-                .indexOf(searchValue
-                    .replace(/[^a-zа-я\d]/gi, '')
-                    .toLowerCase()
-                ) !== -1
-        }))
+    const searchInCard = (name: string, tagline: string, firstBrewed: string, searchValues: string[]): boolean => {
+        return searchValues.filter(val => val).every((value, index) => {
+            return (((index === 0) || (index > 0 && value)) && Boolean([name, tagline, firstBrewed].find(val => {
+                return val.replace(/[^a-zа-я\d]/gi, '').toLowerCase()
+                    .indexOf(value.replace(/[^a-zа-я\d]/gi, '').toLowerCase()) !== -1;
+            })))
+        })
     }
 
-    const isHidden = !isDisplay || (isFiltered && !isLiked) || !searchInCard(name, tagline, firstBrewed, searchValue);
+    const isHidden = !isDisplay || (isFiltered && !isLiked) || !searchInCard(name, tagline, firstBrewed, searchValues);
 
     if (isLoading) return (
         <SCard data-ishidden={isHidden}>
