@@ -12,11 +12,12 @@ import { useStore } from "effector-react";
 import { Input } from "../input";
 import { Paragraph } from "../paragraph";
 import { Title } from "../title";
+import { SEARCH_SPACE } from "../../assets/const";
 
 export const Header: FC = () => {
     const isFiltered = useStore($isFiltered);
     const inputRef = createRef<HTMLInputElement>();
-    const searchValue = useStore($inputSearch);
+    const searchValues = useStore($inputSearch);
 
     return (
         <SHeader>
@@ -26,7 +27,7 @@ export const Header: FC = () => {
                 <Button isDisable={true} onClick={() => onSearchReset()} text='Select all'/>
                 <Button isDisable={true} onClick={() => onSearchReset()} text='Like selected'/>
                 <Button isDisable={true} onClick={() => onSearchReset()} text='Remove selected'/>
-                <Input value={searchValue}
+                <Input value={searchValues.join(SEARCH_SPACE)}
                        onChange={() => onInputSearched(inputRef.current?.value || '')}
                        ref={inputRef}/>
                 <Button onClick={() => onSearchReset()} text='Clear search bar'/>
