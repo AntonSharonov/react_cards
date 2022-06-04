@@ -9,4 +9,5 @@ export const Title: FC<ITitle> = ({ text }) => <STitle>{text}</STitle>
 
 const STitle = styled.h2`
   margin: 10px;
+  min-width: 30px;
 `;

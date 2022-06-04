@@ -4,10 +4,11 @@ import styled from 'styled-components'
 interface IInput {
     onChange: ChangeEventHandler;
     value: string;
+    placeholder: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, IInput>(
-    ({ onChange, value }, ref) => <SInput value={value} ref={ref} onChange={onChange}/>
+export const Input = forwardRef<HTMLInputElement, IInput>(({ onChange, value, placeholder }, ref) =>
+    <SInput value={ value } ref={ ref } onChange={ onChange } placeholder={ placeholder }/>
 )
 
 const SInput = styled.input.attrs({ type: "text" })`
@@ -15,7 +16,7 @@ const SInput = styled.input.attrs({ type: "text" })`
   margin: 10px;
   padding: 0 20px;
   height: 38px;
-  width: 200px;
+  width: 300px;
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
