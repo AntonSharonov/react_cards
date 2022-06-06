@@ -1,10 +1,16 @@
 import { FC, useEffect } from "react";
-import { onFetchLoadingStarted } from "./model";
+import { $isDisplayDeleteModal, onFetchLoadingStarted } from "./model";
 import styled from "styled-components";
 import { CardList } from "../../ui/cardList/cardList";
 import { Header } from "../../ui/header/header";
+import { useStore } from "effector-react";
+import { DeleteRolesModal } from "../deleteModal";
+import { Overlay } from "../../ui/overlay";
+import { HeartIcon } from "../../ui/icons/heartIcon";
 
 export const ProductCardsSection: FC = () => {
+    const isDisplayDeleteModal = useStore($isDisplayDeleteModal);
+
     useEffect(() => {
         onFetchLoadingStarted();
     }, [])
@@ -13,6 +19,11 @@ export const ProductCardsSection: FC = () => {
         <SProductCardsSection>
             <Header/>
             <CardList/>
+            { isDisplayDeleteModal && (
+                <Overlay>
+                    <DeleteRolesModal/>
+                </Overlay>
+            ) }
         </SProductCardsSection>
     )
 }

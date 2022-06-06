@@ -20,6 +20,8 @@ const SButton = styled.button`
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
+  user-select: none;
+  min-width: 110px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 
   &:hover, &[data-active='true']:hover {
