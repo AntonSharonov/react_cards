@@ -4,15 +4,17 @@ import { DEFAULT_IMG_SRC } from "../../assets/const";
 import { Image } from "../image";
 import { Title } from "../title";
 import { Paragraph } from "../paragraph";
-import { Button } from "../button";
-import { LikeButton } from "../likeButton";
 import { Loader } from "../loader";
 import { Checkbox } from "../checkbox";
 import {
     $checkedIDs,
     $inputSearch,
     $isFiltered,
-    $isLoading, $likedIDs, onRemoveCard, updateCheckedRoles, updateLikedRoles
+    $isLoading,
+    $likedIDs,
+    onRemoveCard,
+    updateCheckedRoles,
+    updateLikedRoles
 } from "../../shared/productCards/model";
 import { useStore } from "effector-react";
 import { HeartIcon } from "../icons/heartIcon";
@@ -53,11 +55,10 @@ export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) =>
     )
 
     return (
-        <SCard data-ishidden={ isHidden }>
-            <SCell data-size='small'><Paragraph text={ id.toString() }/></SCell>
+        <SCard data-ishidden={ isHidden } data-checked={ isChecked }>
             <SCell data-size='small'><Checkbox isChecked={ isChecked }
                                                onChange={ () => updateCheckedRoles(id) }/></SCell>
-            <SCell data-size='small'><Image src={ imageUrl || DEFAULT_IMG_SRC } height='120px' alt={ name }/></SCell>
+            <SCell data-size='medium'><SImage src={ imageUrl || DEFAULT_IMG_SRC } height='200px' alt={ name }/></SCell>
             <SCell data-size='large'><Title text={ name }/></SCell>
             <SCell data-size='small'><Paragraph text={ firstBrewed }/></SCell>
             <SCell data-size='large'><Paragraph text={ tagline }/></SCell>
@@ -75,20 +76,6 @@ export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) =>
     )
 }
 
-const SCard = styled.div`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 70%;
-  height: 150px;
-  margin: 5px;
-  display: flex;
-
-  &[data-ishidden='true'] {
-    display: none;
-  }
-`;
-
 const SCell = styled.div`
   height: 100%;
   background-color: #ffffff;
@@ -98,6 +85,7 @@ const SCell = styled.div`
   align-items: center;
   flex: 2;
   margin: 3px;
+  border: 1px solid transparent;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 16%);
 
   &[data-size='small'] {
@@ -111,6 +99,33 @@ const SCell = styled.div`
   &[data-size='large'] {
     flex: 4;
   }
+
+  &:hover {
+    background-color: #ebedf3 !important;
+  }
+`;
+
+const SCard = styled.div`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 70%;
+  height: 120px;
+  margin: 5px;
+  display: flex;
+
+  &[data-ishidden='true'] {
+    display: none;
+  }
+
+  &:hover ${ SCell } {
+    background-color: #F8F9FF;
+  }
+
+  &[data-checked='true'] ${ SCell } {
+    background-color: #F0F2FA;
+    border: 1px solid #e3e3e3;
+  }
 `;
 
 const SIconWrapper = styled.div`
@@ -118,4 +133,8 @@ const SIconWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const SImage = styled(Image)`
+  transform: rotate(90deg);
 `;
