@@ -7,7 +7,7 @@ import { useStore } from "effector-react";
 
 export const CreateNewCardModal: FC = () => {
     const cards = useStore($data);
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = (data: { [x: string]: string }) => {
         let id = 0;
         cards.forEach((card) => {
@@ -34,18 +34,22 @@ export const CreateNewCardModal: FC = () => {
         <SCreateNewCardModal>
             <SHeader>Create a new card</SHeader>
             <SForm onSubmit={ handleSubmit(onSubmit) }>
-                <SInput { ...register('name', { required: true }) }
+                <SInput data-error={ errors.name?.type === 'required' }
+                        { ...register('name', { required: true }) }
                         placeholder='Type card name here'
                 />
-                <SInput { ...register('tagline', { required: true }) }
+                <SInput data-error={ errors.tagline?.type === 'required' }
+                        { ...register('tagline', { required: true }) }
                         placeholder='Type tagline here'
                 />
-                <SInput { ...register('date', { required: true }) } type='date'
+                <SInput data-error={ errors.date?.type === 'required' }
+                        { ...register('date', { required: true }) }
+                        type='date'
                         placeholder='Type date here'
                 />
                 <SButtons>
                     <Button onClick={ handleClose } text='Cancel'/>
-                    <SInput type="submit"/>
+                    <SInput value='Create' type="submit"/>
                 </SButtons>
             </SForm>
         </SCreateNewCardModal>
@@ -94,6 +98,22 @@ const SInput = styled.input`
   border: 1px solid #e0e0e0;
   border-radius: 10px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  &[data-error='true'] {
+    border: 1px solid #fb3958;
+  }
+
+  &[type='submit'] {
+    cursor: pointer;
+    width: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover, &[data-active='true']:hover {
+      background-color: #f6f6f6;
+    }
+  }
 `;
 
 const SForm = styled.form`

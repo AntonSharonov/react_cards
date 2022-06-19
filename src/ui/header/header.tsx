@@ -215,6 +215,7 @@ const SItemsWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  margin: 10px 0;
 
   @media screen and (max-width: 399px) {
     display: none;
