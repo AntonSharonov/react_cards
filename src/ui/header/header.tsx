@@ -4,13 +4,13 @@ import { Button } from "../button";
 import {
     $checkedIDs, $data,
     $inputSearch,
-    $isFiltered,
+    $isFiltered, $isMenuOpen,
     $likedIDs,
     addLikedRoles,
     onDisplayCreateCardModal,
     onDisplayDeleteModal,
     onFilterChanged,
-    onInputSearched,
+    onInputSearched, onMenuClose,
     onSearchReset,
     removeLikedRoles,
     resetCheckedRoles,
@@ -24,6 +24,8 @@ import { HeartIcon } from "../icons/heartIcon";
 import { TrashIcon } from "../icons/trashIcon";
 import { BrokenHeartIcon } from "../icons/brokenHeartIcon";
 import { CrossIcon } from "../icons/crossIcon";
+import { ArrowDownIcon } from "../icons/arrowDownIcon";
+import { ArrowUpIcon } from "../icons/arrowUpIcon";
 
 export const Header: FC = () => {
     const isFiltered = useStore($isFiltered);
@@ -32,6 +34,7 @@ export const Header: FC = () => {
     const searchValues = useStore($inputSearch);
     const checkedIDs = useStore($checkedIDs);
     const likedIDs = useStore($likedIDs);
+    const isMenuOpen = useStore($isMenuOpen);
 
     const roles = useStore($data);
     const [checked, toggleChecked] = useState(false);
@@ -80,6 +83,8 @@ export const Header: FC = () => {
 
     const handleFilterChanged = () => onFilterChanged();
 
+    const handleMenuClose = () => onMenuClose();
+
     const contains = (where: number[], what: number[]) => {
         for (let i = 0; i < what.length; i++) {
             if (where.indexOf(what[i]) === -1) return false;
@@ -91,7 +96,7 @@ export const Header: FC = () => {
 
     return (
         <SHeader>
-            <SRow>
+            { isMenuOpen && <SRow>
                 <SItemsWrapper>
                     <SItems>
                         <Paragraph text={ roles.length.toString() }/>
@@ -164,8 +169,8 @@ export const Header: FC = () => {
                         </SIconWrapper>
                     </SIconsWrapper>
                 </SButtonsWrapper>
-            </SRow>
-            <SMobileSearchInputWrapper>
+            </SRow> }
+            { isMenuOpen && <SMobileSearchInputWrapper>
                 <Input isDisable={ !roles.length }
                        placeholder='Search in cards...'
                        value={ searchValues.join(SEARCH_SPACE) }
@@ -177,7 +182,12 @@ export const Header: FC = () => {
                            height={ '16px' }
                            fill={ searchValues.join() ? '#000000' : '#bfbfbf' }/>
                        }/>
-            </SMobileSearchInputWrapper>
+            </SMobileSearchInputWrapper> }
+            <SHideIconWrapper onClick={ handleMenuClose }>
+                { isMenuOpen ?
+                    <ArrowUpIcon width='30px' height='30px' fill='#adadad'/> :
+                    <ArrowDownIcon width='30px' height='30px' fill='#adadad'/> }
+            </SHideIconWrapper>
         </SHeader>
     )
 }
@@ -186,7 +196,7 @@ const SHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100px;
+  min-height: 50px;
   width: 100%;
   background-color: #ffffff;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 16%);
@@ -280,5 +290,16 @@ const SMobileSearchInputWrapper = styled.div`
 
   @media screen and (max-width: 399px) {
     max-width: 310px;
+  }
+`;
+
+const SHideIconWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+
+  @media screen and (min-width: 1001px) {
+    display: none;
   }
 `;

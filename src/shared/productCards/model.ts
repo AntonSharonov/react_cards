@@ -13,6 +13,7 @@ export const $checkedIDs = createStore<number[]>([]);
 export const $likedIDs = createStore<number[]>([]);
 export const $isDisplayDeleteModal = createStore<boolean>(false);
 export const $isDisplayCreateNewCardModal = createStore<boolean>(false);
+export const $isMenuOpen = createStore<boolean>(true);
 
 export const onFetchedFx = createEffect(async () => {
     const res = await fetch(`${ process.env.REACT_APP_PUNK_API_URL }`);
@@ -38,6 +39,8 @@ export const addLikedRoles = createEvent<number>();
 export const removeLikedRoles = createEvent<number>();
 export const resetLikedRoles = createEvent();
 export const onCreateNewCard = createEvent<Card>();
+export const onMenuClose = createEvent();
+export const onMenuReset = createEvent();
 
 $data.on(onFetchedFx.doneData, (_, data) => {
     return data.map((card: Card) => {
@@ -58,6 +61,7 @@ $isFiltered.on(onFilterChanged, (value) => !value).reset(onFilterReset);
 $inputSearch.on(onInputSearched, (store, value) => value.split(SEARCH_SPACE)).reset(onSearchReset);
 $isDisplayDeleteModal.on(onDisplayDeleteModal, (display) => !display).reset(onDeleteModalReset);
 $isDisplayCreateNewCardModal.on(onDisplayCreateCardModal, (display) => !display).reset(onCreateCardModalReset);
+$isMenuOpen.on(onMenuClose, (v) => !v).reset(onMenuReset);
 
 $checkedIDs
     .on(updateCheckedRoles, (s, r) => {
