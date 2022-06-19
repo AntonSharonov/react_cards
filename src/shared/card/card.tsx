@@ -1,22 +1,22 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Image } from "../image";
-import { Title } from "../title";
-import { Paragraph } from "../paragraph";
-import { Checkbox } from "../checkbox";
+import { Image } from "../../ui/image";
+import { Title } from "../../ui/title";
+import { Paragraph } from "../../ui/paragraph";
+import { Checkbox } from "../../ui/checkbox";
 import {
-    $checkedIDs,
+    $selectedCardsIDs,
     $inputSearch,
     $isFiltered,
-    $likedIDs,
-    onRemoveCard,
-    updateCheckedRoles,
-    updateLikedRoles
-} from "../../shared/productCards/model";
+    $likedCardsIDs,
+    onCardRemoved,
+    onSelectedCardsUpdated,
+    onLikedCardsUpdated
+} from "../productCards/model";
 import { useStore } from "effector-react";
-import { HeartIcon } from "../icons/heartIcon";
-import { TrashIcon } from "../icons/trashIcon";
-import BottleImage from '../images/bottle.png'
+import { HeartIcon } from "../../ui/icons/heartIcon";
+import { TrashIcon } from "../../ui/icons/trashIcon";
+import BottleImage from '../../ui/images/bottle.png'
 
 interface ICard {
     id: number;
@@ -29,9 +29,9 @@ interface ICard {
 export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) => {
     const isFiltered = useStore($isFiltered);
     const searchValues = useStore($inputSearch);
-    const checkedIDs = useStore($checkedIDs);
-    const likedIDs = useStore($likedIDs);
-    const isChecked = Boolean(checkedIDs.find((checkedID) => checkedID === id));
+    const selectedIDs = useStore($selectedCardsIDs);
+    const likedIDs = useStore($likedCardsIDs);
+    const isSelected = Boolean(selectedIDs.find((selectedID) => selectedID === id));
     const isLiked = Boolean(likedIDs.find((likedID) => likedID === id));
 
     const searchInCard = (name: string, tagline: string, firstBrewed: string, searchValues: string[]): boolean => {
@@ -45,22 +45,26 @@ export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) =>
 
     const isHidden = (isFiltered && !isLiked) || !searchInCard(name, tagline, firstBrewed, searchValues);
 
+    const handleSelect = () => onSelectedCardsUpdated(id);
+    const handleLike = () => onLikedCardsUpdated(id);
+    const handleRemove = () => onCardRemoved(id);
+
     return (
         <SCard data-ishidden={ isHidden }
-               data-checked={ isChecked }>
+               data-checked={ isSelected }>
             <SCell data-size='small'>
-                <Checkbox isChecked={ isChecked }
-                          onChange={ () => updateCheckedRoles(id) }
+                <Checkbox isChecked={ isSelected }
+                          onChange={ handleSelect }
                 />
             </SCell>
             <SCell data-size='medium'>
                 <SImage src={ imageUrl || BottleImage } alt={ name }/>
                 <SButtonsWrapperMobile>
-                    <SIconWrapper onClick={ () => updateLikedRoles(id) }>
-                        <HeartIcon fill={ isLiked ? '#fb3958' : '#adadad' } width={ '26px' } height={ '26px' }/>
+                    <SIconWrapper onClick={ handleLike }>
+                        <HeartIcon fill={ isLiked ? '#fb3958' : '#adadad' } width='26px' height='26px'/>
                     </SIconWrapper>
-                    <SIconWrapper onClick={ () => onRemoveCard(id) }>
-                        <TrashIcon width={ '26px' } height={ '26px' } fill={ '#fb3958' }/>
+                    <SIconWrapper onClick={ handleRemove }>
+                        <TrashIcon width='26px' height='26px' fill='#fb3958'/>
                     </SIconWrapper>
                 </SButtonsWrapperMobile>
             </SCell>
@@ -80,11 +84,11 @@ export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) =>
                 <Paragraph text={ tagline }/>
             </SCell>
             <SCell data-size='small' data-content='buttons'>
-                <SIconWrapper onClick={ () => updateLikedRoles(id) }>
-                    <HeartIcon fill={ isLiked ? '#fb3958' : '#adadad' } width={ '26px' } height={ '26px' }/>
+                <SIconWrapper onClick={ handleLike }>
+                    <HeartIcon fill={ isLiked ? '#fb3958' : '#adadad' } width='26px' height='26px'/>
                 </SIconWrapper>
-                <SIconWrapper onClick={ () => onRemoveCard(id) }>
-                    <TrashIcon width={ '26px' } height={ '26px' } fill={ '#fb3958' }/>
+                <SIconWrapper onClick={ handleRemove }>
+                    <TrashIcon width='26px' height='26px' fill='#fb3958'/>
                 </SIconWrapper>
             </SCell>
         </SCard>

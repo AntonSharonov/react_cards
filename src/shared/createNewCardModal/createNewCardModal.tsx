@@ -1,13 +1,14 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { Button } from "../ui/button";
-import { $data, onCreateCardModalReset, onCreateNewCard } from "./productCards/model";
+import { Button } from "../../ui/button";
+import { $cardsData, onCardCreateModalReset, onNewCardCreated } from "../productCards/model";
 import { useForm } from "react-hook-form";
 import { useStore } from "effector-react";
 
 export const CreateNewCardModal: FC = () => {
-    const cards = useStore($data);
+    const cards = useStore($cardsData);
     const { register, handleSubmit, formState: { errors } } = useForm();
+
     const onSubmit = (data: { [x: string]: string }) => {
         let id = 0;
         cards.forEach((card) => {
@@ -19,16 +20,17 @@ export const CreateNewCardModal: FC = () => {
         const date = data.date.split('-');
         const firstBrewed = `${ date[1] }/${ date[0] }`;
 
-        onCreateNewCard({
+        onNewCardCreated({
             id,
             name: data.name,
             tagline: data.tagline,
             first_brewed: firstBrewed,
             image_url: '',
         });
-        onCreateCardModalReset();
+        onCardCreateModalReset();
     }
-    const handleClose = () => onCreateCardModalReset();
+
+    const handleClose = () => onCardCreateModalReset();
 
     return (
         <SCreateNewCardModal>

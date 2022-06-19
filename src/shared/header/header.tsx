@@ -1,89 +1,87 @@
 import { createRef, FC, useEffect, useState } from "react";
 import styled from 'styled-components'
-import { Button } from "../button";
+import { Button } from "../../ui/button";
 import {
-    $checkedIDs, $data,
+    $selectedCardsIDs,
+    $cardsData,
     $inputSearch,
-    $isFiltered, $isMenuOpen,
-    $likedIDs,
-    addLikedRoles,
-    onDisplayCreateCardModal,
-    onDisplayDeleteModal,
+    $isFiltered,
+    $isShowHeaderMenu,
+    $likedCardsIDs,
+    onLikedCardsAdded,
+    onCardCreateModalShowed,
+    onCardRemoveModalShowed,
     onFilterChanged,
-    onInputSearched, onMenuClose,
+    onInputSearched,
+    onHeaderMenuShowed,
     onSearchReset,
-    removeLikedRoles,
-    resetCheckedRoles,
-    updateCheckedRoles
-} from "../../shared/productCards/model";
+    onLikedCardsRemoved,
+    onSelectedCardsReset,
+    onSelectedCardsUpdated
+} from "../productCards/model";
 import { useStore } from "effector-react";
-import { Input } from "../input";
-import { Paragraph } from "../paragraph";
-import { SEARCH_SPACE } from "../../assets/const";
-import { HeartIcon } from "../icons/heartIcon";
-import { TrashIcon } from "../icons/trashIcon";
-import { BrokenHeartIcon } from "../icons/brokenHeartIcon";
-import { CrossIcon } from "../icons/crossIcon";
-import { ArrowDownIcon } from "../icons/arrowDownIcon";
-import { ArrowUpIcon } from "../icons/arrowUpIcon";
+import { Input } from "../../ui/input";
+import { Paragraph } from "../../ui/paragraph";
+import { HeartIcon } from "../../ui/icons/heartIcon";
+import { TrashIcon } from "../../ui/icons/trashIcon";
+import { BrokenHeartIcon } from "../../ui/icons/brokenHeartIcon";
+import { CrossIcon } from "../../ui/icons/crossIcon";
+import { ArrowDownIcon } from "../../ui/icons/arrowDownIcon";
+import { ArrowUpIcon } from "../../ui/icons/arrowUpIcon";
 
 export const Header: FC = () => {
     const isFiltered = useStore($isFiltered);
     const inputRefMobile = createRef<HTMLInputElement>();
     const inputRef = createRef<HTMLInputElement>();
     const searchValues = useStore($inputSearch);
-    const checkedIDs = useStore($checkedIDs);
-    const likedIDs = useStore($likedIDs);
-    const isMenuOpen = useStore($isMenuOpen);
+    const selectedIDs = useStore($selectedCardsIDs);
+    const likedIDs = useStore($likedCardsIDs);
+    const isMenuOpen = useStore($isShowHeaderMenu);
 
-    const roles = useStore($data);
-    const [checked, toggleChecked] = useState(false);
+    const cards = useStore($cardsData);
+    const [selected, setSelected] = useState(false);
 
     useEffect(() => {
-        toggleChecked(Boolean(roles.length) && checkedIDs.length === roles.length);
-    }, [checkedIDs.length, roles.length]);
+        setSelected(Boolean(cards.length) && selectedIDs.length === cards.length);
+    }, [selectedIDs.length, cards.length]);
 
-    const handleCheck = () => {
-        resetCheckedRoles();
-        if (!checked) {
-            roles.forEach((role) => {
-                updateCheckedRoles(role.id);
+    const handleSelect = () => {
+        onSelectedCardsReset();
+        if (!selected) {
+            cards.forEach((card) => {
+                onSelectedCardsUpdated(card.id);
             });
         }
     };
 
     const handleLikeSet = () => {
-        for (let i = roles.length - 1; i >= 0; i--) {
-            const checkedID = checkedIDs.find((id) => id === roles[i].id);
-            const likedID = likedIDs.find((id) => id === roles[i].id);
+        for (let i = cards.length - 1; i >= 0; i--) {
+            const selectedID = selectedIDs.find((id) => id === cards[i].id);
+            const likedID = likedIDs.find((id) => id === cards[i].id);
 
-            if (checkedID && checkedID !== likedID) addLikedRoles(checkedID);
+            if (selectedID && selectedID !== likedID) onLikedCardsAdded(selectedID);
         }
     };
 
     const handleLikeRemove = () => {
-        for (let i = roles.length - 1; i >= 0; i--) {
-            const checkedID = checkedIDs.find((id) => id === roles[i].id);
-            const likedID = likedIDs.find((id) => id === roles[i].id);
+        for (let i = cards.length - 1; i >= 0; i--) {
+            const selectedID = selectedIDs.find((id) => id === cards[i].id);
+            const likedID = likedIDs.find((id) => id === cards[i].id);
 
-            if (checkedID && likedID) removeLikedRoles(checkedID);
+            if (selectedID && likedID) onLikedCardsRemoved(selectedID);
         }
     };
 
     const handleRemove = () => {
-        if (checkedIDs.length) onDisplayDeleteModal();
+        if (selectedIDs.length) onCardRemoveModalShowed();
     }
 
     const handleInputSearchChangeMobile = () => onInputSearched(inputRefMobile.current?.value || '');
     const handleInputSearchChange = () => onInputSearched(inputRef.current?.value || '');
-
     const handleInputSearchReset = () => onSearchReset();
-
-    const handleCreateNewCard = () => onDisplayCreateCardModal();
-
+    const handleCreateNewCard = () => onCardCreateModalShowed();
     const handleFilterChanged = () => onFilterChanged();
-
-    const handleMenuClose = () => onMenuClose();
+    const handleMenuShow = () => onHeaderMenuShowed();
 
     const contains = (where: number[], what: number[]) => {
         for (let i = 0; i < what.length; i++) {
@@ -92,18 +90,18 @@ export const Header: FC = () => {
         return true;
     }
 
-    const intersection = Boolean(checkedIDs.length && likedIDs.length && checkedIDs.filter(x => likedIDs.includes(x)).length);
+    const intersection = Boolean(selectedIDs.length && likedIDs.length && selectedIDs.filter(x => likedIDs.includes(x)).length);
 
     return (
         <SHeader>
             { isMenuOpen && <SRow>
                 <SItemsWrapper>
                     <SItems>
-                        <Paragraph text={ roles.length.toString() }/>
+                        <Paragraph text={ cards.length.toString() }/>
                         <Paragraph text='total'/>
                     </SItems>
                     <SItems>
-                        <Paragraph text={ checkedIDs.length.toString() }/>
+                        <Paragraph text={ selectedIDs.length.toString() }/>
                         <Paragraph text='selected'/>
                     </SItems>
                     <SItems>
@@ -112,19 +110,19 @@ export const Header: FC = () => {
                     </SItems>
                 </SItemsWrapper>
                 <SButtonsWrapper>
-                    <Button isDisable={ !roles.length }
-                            onClick={ handleCheck }
-                            isActive={ checked }
-                            text={ !checked ? 'Select all' : 'Deselect all' }
+                    <Button isDisable={ !cards.length }
+                            onClick={ handleSelect }
+                            isActive={ selected }
+                            text={ !selected ? 'Select all' : 'Deselect all' }
                     />
                     <Button onClick={ handleCreateNewCard }
                             text='Create a new card'
                     />
                 </SButtonsWrapper>
                 <SSearchInputWrapper>
-                    <Input isDisable={ !roles.length }
+                    <Input isDisable={ !cards.length }
                            placeholder='Search in cards...'
-                           value={ searchValues.join(SEARCH_SPACE) }
+                           value={ searchValues.join(' ') }
                            onChange={ handleInputSearchChange }
                            ref={ inputRef }
                            iconOnClick={ handleInputSearchReset }
@@ -136,17 +134,17 @@ export const Header: FC = () => {
                 </SSearchInputWrapper>
                 <SButtonsWrapper>
                     <Button onClick={ handleFilterChanged }
-                            isDisable={ !roles.length }
+                            isDisable={ !cards.length }
                             isActive={ isFiltered }
                             text='FILTER: by liked'
                     />
                     <SIconsWrapper>
                         <SIconWrapper
-                            data-active={ !contains(likedIDs, checkedIDs) }
+                            data-active={ !contains(likedIDs, selectedIDs) }
                             onClick={ handleLikeSet }>
                             <HeartIcon width='26px'
                                        height='26px'
-                                       fill={ !contains(likedIDs, checkedIDs) ? '#fb3958' : '#eaeaea' }
+                                       fill={ !contains(likedIDs, selectedIDs) ? '#fb3958' : '#eaeaea' }
                             />
                         </SIconWrapper>
                         <SIconWrapper
@@ -159,21 +157,21 @@ export const Header: FC = () => {
                             />
                         </SIconWrapper>
                         <SIconWrapper
-                            data-active={ Boolean(checkedIDs.length) }
+                            data-active={ Boolean(selectedIDs.length) }
                             onClick={ handleRemove }>
                             <TrashIcon
                                 width='26px'
                                 height='26px'
-                                fill={ Boolean(checkedIDs.length) ? '#fb3958' : '#eaeaea' }
+                                fill={ Boolean(selectedIDs.length) ? '#fb3958' : '#eaeaea' }
                             />
                         </SIconWrapper>
                     </SIconsWrapper>
                 </SButtonsWrapper>
             </SRow> }
             { isMenuOpen && <SMobileSearchInputWrapper>
-                <Input isDisable={ !roles.length }
+                <Input isDisable={ !cards.length }
                        placeholder='Search in cards...'
-                       value={ searchValues.join(SEARCH_SPACE) }
+                       value={ searchValues.join(' ') }
                        onChange={ handleInputSearchChangeMobile }
                        ref={ inputRefMobile }
                        iconOnClick={ handleInputSearchReset }
@@ -183,7 +181,7 @@ export const Header: FC = () => {
                            fill={ searchValues.join() ? '#000000' : '#bfbfbf' }/>
                        }/>
             </SMobileSearchInputWrapper> }
-            <SHideIconWrapper onClick={ handleMenuClose }>
+            <SHideIconWrapper onClick={ handleMenuShow }>
                 { isMenuOpen ?
                     <ArrowUpIcon width='30px' height='30px' fill='#adadad'/> :
                     <ArrowDownIcon width='30px' height='30px' fill='#adadad'/> }

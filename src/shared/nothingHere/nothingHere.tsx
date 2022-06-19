@@ -1,11 +1,11 @@
 import { FC } from "react";
-import { NotFound } from "../images/notFound";
+import { NotFound } from "../../ui/images/notFound";
 import styled from "styled-components";
-import { Button } from "../button";
-import { onDisplayCreateCardModal } from "../../shared/productCards/model";
+import { Button } from "../../ui/button";
+import { onCardCreateModalShowed } from "../productCards/model";
 
 export const NothingHere: FC = () => {
-    const handleCreateNewCard = () => onDisplayCreateCardModal();
+    const handleCreateNewCard = () => onCardCreateModalShowed();
     const handlePageRefresh = () => window.location.reload();
 
     return (

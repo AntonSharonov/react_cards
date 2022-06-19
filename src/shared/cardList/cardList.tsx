@@ -1,13 +1,13 @@
 import { FC } from "react";
 import { useStore } from "effector-react";
-import { $data, $isLoading, $isLoadingFinished } from "../../shared/productCards/model";
+import { $cardsData, $isLoading, $isLoadingFinished } from "../productCards/model";
 import { Card } from "../card/card";
 import styled from "styled-components";
 import { NothingHere } from "../nothingHere/nothingHere";
-import { Loader } from "../loader";
+import { Loader } from "../../ui/loader";
 
 export const CardList: FC = () => {
-    const data = useStore($data);
+    const cards = useStore($cardsData);
     const isLoading = useStore($isLoading);
     const isLoadingFinished = useStore($isLoadingFinished);
 
@@ -15,13 +15,13 @@ export const CardList: FC = () => {
         return <Loader/>
     }
 
-    if (!data.length && isLoadingFinished) {
+    if (!cards.length && isLoadingFinished) {
         return <NothingHere/>
     }
 
     return (
         <SCardList>
-            { data?.map((card) => (
+            { cards?.map((card) => (
                 <Card key={ card.id }
                       id={ card.id }
                       name={ card.name }
