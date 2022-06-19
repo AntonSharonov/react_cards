@@ -4,13 +4,11 @@ import { DEFAULT_IMG_SRC } from "../../assets/const";
 import { Image } from "../image";
 import { Title } from "../title";
 import { Paragraph } from "../paragraph";
-import { Loader } from "../loader";
 import { Checkbox } from "../checkbox";
 import {
     $checkedIDs,
     $inputSearch,
     $isFiltered,
-    $isLoading,
     $likedIDs,
     onRemoveCard,
     updateCheckedRoles,
@@ -29,7 +27,6 @@ interface ICard {
 }
 
 export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) => {
-    const isLoading = useStore($isLoading);
     const isFiltered = useStore($isFiltered);
     const searchValues = useStore($inputSearch);
     const checkedIDs = useStore($checkedIDs);
@@ -47,12 +44,6 @@ export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) =>
     }
 
     const isHidden = (isFiltered && !isLiked) || !searchInCard(name, tagline, firstBrewed, searchValues);
-
-    if (isLoading) return (
-        <SCard data-ishidden={ isHidden }>
-            <Loader text='Loading...'/>
-        </SCard>
-    )
 
     return (
         <SCard data-ishidden={ isHidden } data-checked={ isChecked }>

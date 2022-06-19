@@ -6,7 +6,6 @@ import { Header } from "../../ui/header/header";
 import { useStore } from "effector-react";
 import { DeleteRolesModal } from "../deleteModal";
 import { Overlay } from "../../ui/overlay";
-import { HeartIcon } from "../../ui/icons/heartIcon";
 
 export const ProductCardsSection: FC = () => {
     const isDisplayDeleteModal = useStore($isDisplayDeleteModal);

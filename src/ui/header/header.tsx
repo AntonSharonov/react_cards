@@ -73,7 +73,7 @@ export const Header: FC = () => {
 
     const handleInputSearchReset = () => onSearchReset();
 
-    const handleAddNewCard = () => alert('Add New Card');
+    const handleCreateNewCard = () => alert('Create a New Card');
 
     const handleFilterChanged = () => onFilterChanged();
 
@@ -92,11 +92,11 @@ export const Header: FC = () => {
                 <SItemsWrapper>
                     <SItems>
                         <Paragraph text={ checkedIDs.length.toString() }/>
-                        <Paragraph text='items selected'/>
+                        <Paragraph text='selected'/>
                     </SItems>
                     <SItems>
                         <Paragraph text={ likedIDs.length.toString() }/>
-                        <Paragraph text='items liked'/>
+                        <Paragraph text='liked'/>
                     </SItems>
                 </SItemsWrapper>
                 <Button isDisable={ !roles.length }
@@ -104,8 +104,8 @@ export const Header: FC = () => {
                         isActive={ checked }
                         text={ !checked ? 'Select all' : 'Deselect all' }
                 />
-                <Button onClick={ handleAddNewCard }
-                        text='Add new card'
+                <Button onClick={ handleCreateNewCard }
+                        text='Create a new card'
                 />
                 <Input isDisable={ !roles.length }
                        placeholder='Search in cards...'

@@ -6,6 +6,7 @@ type Card = { id: number, image_url: string, name: string, first_brewed: string,
 export const $data = createStore<Card[]>([]);
 
 export const $isLoading = createStore<boolean>(false);
+export const $isLoadingFinished = createStore<boolean>(false);
 export const $isFiltered = createStore<boolean>(false);
 export const $inputSearch = createStore<string[]>(['']);
 export const $checkedIDs = createStore<number[]>([]);
@@ -47,6 +48,7 @@ $data.on(onFetchedFx.doneData, (_, data) => {
 }).on(onRemoveCard, (store, value) => store.filter((card) => card.id !== value));
 
 $isLoading.on(onFetchLoadingStarted, () => true).reset(onFetchLoadingFinished);
+$isLoadingFinished.on(onFetchLoadingFinished, () => true);
 $isFiltered.on(onFilterChanged, (value) => !value).reset(onFilterReset);
 $inputSearch.on(onInputSearched, (store, value) => value.split(SEARCH_SPACE)).reset(onSearchReset);
 $isDisplayDeleteModal.on(onDisplayDeleteModal, (display) => !display).reset(onDeleteModalReset);
