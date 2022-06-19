@@ -37,8 +37,16 @@ export const CardList: FC = () => {
 const SCardList = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 1200px;
   justify-content: center;
   align-items: center;
-  margin: 30px 0;
+  margin: 20px 0;
+
+  @media screen and (max-width: 1240px) {
+    width: 1000px;
+  }
+
+  @media screen and (max-width: 1000px) {
+    width: 100%;
+  }
 `;

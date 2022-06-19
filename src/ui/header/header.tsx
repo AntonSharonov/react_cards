@@ -91,6 +91,10 @@ export const Header: FC = () => {
             <SRow>
                 <SItemsWrapper>
                     <SItems>
+                        <Paragraph text={ roles.length.toString() }/>
+                        <Paragraph text='total'/>
+                    </SItems>
+                    <SItems>
                         <Paragraph text={ checkedIDs.length.toString() }/>
                         <Paragraph text='selected'/>
                     </SItems>
@@ -99,14 +103,66 @@ export const Header: FC = () => {
                         <Paragraph text='liked'/>
                     </SItems>
                 </SItemsWrapper>
-                <Button isDisable={ !roles.length }
-                        onClick={ handleCheck }
-                        isActive={ checked }
-                        text={ !checked ? 'Select all' : 'Deselect all' }
-                />
-                <Button onClick={ handleCreateNewCard }
-                        text='Create a new card'
-                />
+                <SButtonsWrapper>
+                    <Button isDisable={ !roles.length }
+                            onClick={ handleCheck }
+                            isActive={ checked }
+                            text={ !checked ? 'Select all' : 'Deselect all' }
+                    />
+                    <Button onClick={ handleCreateNewCard }
+                            text='Create a new card'
+                    />
+                </SButtonsWrapper>
+                <SSearchInputWrapper>
+                    <Input isDisable={ !roles.length }
+                           placeholder='Search in cards...'
+                           value={ searchValues.join(SEARCH_SPACE) }
+                           onChange={ handleInputSearchChange }
+                           ref={ inputRef }
+                           iconOnClick={ handleInputSearchReset }
+                           icon={ <CrossIcon
+                               width={ '16px' }
+                               height={ '16px' }
+                               fill={ searchValues.join() ? '#000000' : '#bfbfbf' }/>
+                           }/>
+                </SSearchInputWrapper>
+                <SButtonsWrapper>
+                    <Button onClick={ handleFilterChanged }
+                            isDisable={ !roles.length }
+                            isActive={ isFiltered }
+                            text='FILTER: by liked'
+                    />
+                    <SIconsWrapper>
+                        <SIconWrapper
+                            data-active={ !contains(likedIDs, checkedIDs) }
+                            onClick={ handleLikeSet }>
+                            <HeartIcon width='26px'
+                                       height='26px'
+                                       fill={ !contains(likedIDs, checkedIDs) ? '#fb3958' : '#eaeaea' }
+                            />
+                        </SIconWrapper>
+                        <SIconWrapper
+                            data-active={ intersection }
+                            onClick={ handleLikeRemove }>
+                            <BrokenHeartIcon
+                                width='26px'
+                                height='26px'
+                                fill={ intersection ? '#adadad' : '#eaeaea' }
+                            />
+                        </SIconWrapper>
+                        <SIconWrapper
+                            data-active={ Boolean(checkedIDs.length) }
+                            onClick={ handleRemove }>
+                            <TrashIcon
+                                width='26px'
+                                height='26px'
+                                fill={ Boolean(checkedIDs.length) ? '#fb3958' : '#eaeaea' }
+                            />
+                        </SIconWrapper>
+                    </SIconsWrapper>
+                </SButtonsWrapper>
+            </SRow>
+            <SMobileSearchInputWrapper>
                 <Input isDisable={ !roles.length }
                        placeholder='Search in cards...'
                        value={ searchValues.join(SEARCH_SPACE) }
@@ -118,61 +174,27 @@ export const Header: FC = () => {
                            height={ '16px' }
                            fill={ searchValues.join() ? '#000000' : '#bfbfbf' }/>
                        }/>
-                <Button onClick={ handleFilterChanged }
-                        isDisable={ !roles.length }
-                        isActive={ isFiltered }
-                        text='FILTER: by liked'
-                />
-                <SIconsWrapper>
-                    <SIconWrapper
-                        data-active={ !contains(likedIDs, checkedIDs) }
-                        onClick={ handleLikeSet }>
-                        <HeartIcon width='26px'
-                                   height='26px'
-                                   fill={ !contains(likedIDs, checkedIDs) ? '#fb3958' : '#eaeaea' }
-                        />
-                    </SIconWrapper>
-                    <SIconWrapper
-                        data-active={ intersection }
-                        onClick={ handleLikeRemove }>
-                        <BrokenHeartIcon
-                            width='26px'
-                            height='26px'
-                            fill={ intersection ? '#adadad' : '#eaeaea' }
-                        />
-                    </SIconWrapper>
-                    <SIconWrapper
-                        data-active={ Boolean(checkedIDs.length) }
-                        onClick={ handleRemove }>
-                        <TrashIcon
-                            width='26px'
-                            height='26px'
-                            fill={ Boolean(checkedIDs.length) ? '#fb3958' : '#eaeaea' }
-                        />
-                    </SIconWrapper>
-                </SIconsWrapper>
-            </SRow>
+            </SMobileSearchInputWrapper>
         </SHeader>
     )
 }
 
 const SHeader = styled.div`
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const SRow = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  height: 100px;
-  width: 70%;
+  min-height: 100px;
+  width: 100%;
   background-color: #ffffff;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 16%);
-  border-radius: 8px;
-  margin-top: 30px;
+  margin: 0 10px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  @media screen and (max-width: 1000px) {
+    flex-direction: column;
+  }
 `;
 
 const SItemsWrapper = styled.div`
@@ -180,6 +202,10 @@ const SItemsWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+
+  @media screen and (max-width: 399px) {
+    display: none;
+  }
 `;
 
 const SItems = styled.div`
@@ -209,5 +235,47 @@ const SIconsWrapper = styled.div`
   height: 38px;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  margin: 10px;
+  margin: 5px;
+`;
+
+const SButtonsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 1000px) {
+    align-items: normal;
+    flex-direction: column;
+  }
+`;
+
+const SRow = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media screen and (max-width: 299px) {
+    align-items: normal;
+    flex-direction: column;
+  }
+`;
+
+const SSearchInputWrapper = styled.div`
+  display: flex;
+
+  @media screen and (max-width: 1000px) {
+    display: none;
+  }
+`;
+
+const SMobileSearchInputWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 424px;
+
+  @media screen and (min-width: 1001px) {
+    display: none;
+  }
+
+  @media screen and (max-width: 399px) {
+    max-width: 310px;
+  }
 `;

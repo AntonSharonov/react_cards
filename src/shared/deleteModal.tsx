@@ -48,6 +48,11 @@ const SDeleteRolesModal = styled.div`
   &[data-display='true'] {
     display: flex;
   }
+
+  @media screen and (max-width: 370px) {
+    width: 100%;
+    margin: 20px;
+  }
 `;
 
 const SHeader = styled.p`

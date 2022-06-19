@@ -28,6 +28,14 @@ const SNothingHere = styled.div`
   align-items: center;
   flex-direction: column;
   margin-top: 100px;
+
+  @media screen and (max-height: 600px) {
+    margin-top: 20px;
+  }
+
+  @media screen and (max-width: 440px) {
+    margin-top: 20px;
+  }
 `;
 
 const SText = styled.p`
@@ -37,4 +45,8 @@ const SText = styled.p`
 const SWrapper = styled.div`
   display: flex;
   align-items: center;
+
+  @media screen and (max-width: 440px) {
+    flex-direction: column;
+  }
 `;

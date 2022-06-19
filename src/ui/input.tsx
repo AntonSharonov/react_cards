@@ -46,11 +46,11 @@ const SInput = styled.input.attrs({ type: "text" })`
 const SWrapper = styled.div`
   display: flex;
   height: 38px;
-  width: 300px;
+  width: 100%;
   flex-direction: row;
   align-items: center;
   border: 1px solid #e0e0e0;
-  margin: 10px;
+  margin: 5px;
   border-radius: 10px;
   padding: 0 20px;
 
