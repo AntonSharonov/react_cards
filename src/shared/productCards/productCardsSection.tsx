@@ -1,15 +1,16 @@
 import { FC, useEffect } from "react";
-import { $isDisplayDeleteModal, onFetchLoadingStarted } from "./model";
+import { $isShowCardCreateModal, $isShowCardRemoveModal, onFetchLoadingStarted } from "./model";
 import styled from "styled-components";
-import { CardList } from "../../ui/cardList/cardList";
-import { Header } from "../../ui/header/header";
+import { CardList } from "../cardList/cardList";
+import { Header } from "../header/header";
 import { useStore } from "effector-react";
-import { DeleteRolesModal } from "../deleteModal";
+import { RemoveCardsModal } from "../removeCardsModal/removeCardsModal";
 import { Overlay } from "../../ui/overlay";
-import { HeartIcon } from "../../ui/icons/heartIcon";
+import { CreateNewCardModal } from "../createNewCardModal/createNewCardModal";
 
 export const ProductCardsSection: FC = () => {
-    const isDisplayDeleteModal = useStore($isDisplayDeleteModal);
+    const isShowCardRemoveModal = useStore($isShowCardRemoveModal);
+    const isShowCardCreateModal = useStore($isShowCardCreateModal);
 
     useEffect(() => {
         onFetchLoadingStarted();
@@ -19,9 +20,14 @@ export const ProductCardsSection: FC = () => {
         <SProductCardsSection>
             <Header/>
             <CardList/>
-            { isDisplayDeleteModal && (
+            { isShowCardRemoveModal && (
                 <Overlay>
-                    <DeleteRolesModal/>
+                    <RemoveCardsModal/>
+                </Overlay>
+            ) }
+            { isShowCardCreateModal && (
+                <Overlay>
+                    <CreateNewCardModal/>
                 </Overlay>
             ) }
         </SProductCardsSection>

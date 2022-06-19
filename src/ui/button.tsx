@@ -9,12 +9,12 @@ interface IButton {
 }
 
 export const Button: FC<IButton> = ({ text, onClick, isActive, isDisable }) => (
-    <SButton data-active={isActive} disabled={isDisable} onClick={onClick}>{text}</SButton>
+    <SButton data-active={ isActive } disabled={ isDisable } onClick={ onClick }>{ text }</SButton>
 )
 
 const SButton = styled.button`
   cursor: pointer;
-  margin: 10px;
+  margin: 5px;
   padding: 0 20px 1px;
   height: 40px;
   background-color: #fff;

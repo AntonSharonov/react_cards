@@ -10,4 +10,13 @@ export const Paragraph: FC<IParagraph> = ({ text }) => <SParagraph>{ text }</SPa
 const SParagraph = styled.p`
   margin: 3px 10px;
   min-width: 18px;
+
+  @media screen and (max-width: 399px) {
+    font-size: 12px;
+  }
+
+  @media screen and (max-width: 299px) {
+    font-size: 10px;
+    overflow-wrap: anywhere;
+  }
 `;

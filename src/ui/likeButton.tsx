@@ -7,7 +7,7 @@ interface ILikeButton {
 }
 
 export const LikeButton: FC<ILikeButton> = ({ onClick, isLiked }) => (
-    <SLikeButton onClick={onClick} data-isliked={isLiked}/>
+    <SLikeButton onClick={ onClick } data-isliked={ isLiked }/>
 )
 
 const SLikeButton = styled.button`

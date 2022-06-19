@@ -1,4 +1,4 @@
-import {FC, ReactNode} from 'react';
+import { FC, ReactNode } from 'react';
 
 import styled from 'styled-components';
 
@@ -6,8 +6,8 @@ interface IOverlay {
     children?: ReactNode;
 }
 
-export const Overlay: FC<IOverlay> = ({children}) => {
-    return <SOverlay>{children}</SOverlay>;
+export const Overlay: FC<IOverlay> = ({ children }) => {
+    return <SOverlay>{ children }</SOverlay>;
 };
 
 const SOverlay = styled.div`
@@ -21,4 +21,5 @@ const SOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 `;

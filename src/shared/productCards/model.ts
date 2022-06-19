@@ -1,16 +1,16 @@
 import { createEffect, createEvent, createStore, forward } from "effector";
-import { SEARCH_SPACE } from "../../assets/const";
+import { TCard } from "../../lib/types/cards";
 
-type Card = { id: number, image_url: string, name: string, first_brewed: string, tagline: string };
-
-export const $data = createStore<Card[]>([]);
-
+export const $cardsData = createStore<TCard[]>([]);
 export const $isLoading = createStore<boolean>(false);
+export const $isLoadingFinished = createStore<boolean>(false);
 export const $isFiltered = createStore<boolean>(false);
 export const $inputSearch = createStore<string[]>(['']);
-export const $checkedIDs = createStore<number[]>([]);
-export const $likedIDs = createStore<number[]>([]);
-export const $isDisplayDeleteModal = createStore<boolean>(false);
+export const $selectedCardsIDs = createStore<number[]>([]);
+export const $likedCardsIDs = createStore<number[]>([]);
+export const $isShowCardRemoveModal = createStore<boolean>(false);
+export const $isShowCardCreateModal = createStore<boolean>(false);
+export const $isShowHeaderMenu = createStore<boolean>(true);
 
 export const onFetchedFx = createEffect(async () => {
     const res = await fetch(`${ process.env.REACT_APP_PUNK_API_URL }`);
@@ -20,22 +20,23 @@ export const onFetchedFx = createEffect(async () => {
 export const onFetchLoadingStarted = createEvent();
 export const onFetchLoadingFinished = createEvent();
 export const onFilterChanged = createEvent();
-export const onFilterReset = createEvent();
 export const onInputSearched = createEvent<string>();
 export const onSearchReset = createEvent();
-export const updateCheckedRoles = createEvent<number>();
-export const removeCheckedRoles = createEvent<number>();
-export const resetCheckedRoles = createEvent();
-export const onDisplayDeleteModal = createEvent();
-export const onDeleteModalReset = createEvent();
-export const onRemoveCard = createEvent<number>();
-export const updateLikedRoles = createEvent<number>();
-export const addLikedRoles = createEvent<number>();
-export const removeLikedRoles = createEvent<number>();
-export const resetLikedRoles = createEvent();
+export const onSelectedCardsUpdated = createEvent<number>();
+export const onSelectedCardsRemoved = createEvent<number>();
+export const onSelectedCardsReset = createEvent();
+export const onCardRemoveModalShowed = createEvent();
+export const onCardCreateModalShowed = createEvent();
+export const onCardCreateModalReset = createEvent();
+export const onCardRemoved = createEvent<number>();
+export const onLikedCardsUpdated = createEvent<number>();
+export const onLikedCardsAdded = createEvent<number>();
+export const onLikedCardsRemoved = createEvent<number>();
+export const onNewCardCreated = createEvent<TCard>();
+export const onHeaderMenuShowed = createEvent();
 
-$data.on(onFetchedFx.doneData, (_, data) => {
-    return data.map((card: Card) => {
+$cardsData.on(onFetchedFx.doneData, (_, cardsData) => {
+    return cardsData.map((card: TCard) => {
         return {
             id: card.id,
             image_url: card.image_url,
@@ -44,31 +45,30 @@ $data.on(onFetchedFx.doneData, (_, data) => {
             tagline: card.tagline,
         }
     })
-}).on(onRemoveCard, (store, value) => store.filter((card) => card.id !== value));
+}).on(onCardRemoved, (cardsData, cardID) => cardsData.filter((card) => card.id !== cardID));
 
+$cardsData.on(onNewCardCreated, (cardsData, newCard) => cardsData.concat(newCard));
 $isLoading.on(onFetchLoadingStarted, () => true).reset(onFetchLoadingFinished);
-$isFiltered.on(onFilterChanged, (value) => !value).reset(onFilterReset);
-$inputSearch.on(onInputSearched, (store, value) => value.split(SEARCH_SPACE)).reset(onSearchReset);
-$isDisplayDeleteModal.on(onDisplayDeleteModal, (display) => !display).reset(onDeleteModalReset);
+$isLoadingFinished.on(onFetchLoadingFinished, () => true);
+$isFiltered.on(onFilterChanged, (f) => !f);
+$inputSearch.on(onInputSearched, (_, searchingValue) => searchingValue.split(' ')).reset(onSearchReset);
+$isShowCardRemoveModal.on(onCardRemoveModalShowed, (s) => !s);
+$isShowCardCreateModal.on(onCardCreateModalShowed, (s) => !s).reset(onCardCreateModalReset);
+$isShowHeaderMenu.on(onHeaderMenuShowed, (s) => !s);
 
-$checkedIDs
-    .on(updateCheckedRoles, (s, r) => {
-        return s.find((id) => id === r) ? s.filter((id) => id !== r) : s.concat(r);
+$selectedCardsIDs
+    .on(onSelectedCardsUpdated, (selectedCardsIDs, newID) => {
+        return selectedCardsIDs.find((id) => id === newID) ? selectedCardsIDs.filter((id) => id !== newID) : selectedCardsIDs.concat(newID);
     })
-    .on(removeCheckedRoles, (store, value) => store.filter((id) => id !== value))
-    .reset(resetCheckedRoles);
+    .on(onSelectedCardsRemoved, (selectedCardsIDs, removedID) => selectedCardsIDs.filter((id) => id !== removedID))
+    .reset(onSelectedCardsReset);
 
-$likedIDs
-    .on(updateLikedRoles, (s, r) => {
-        return s.find((id) => id === r) ? s.filter((id) => id !== r) : s.concat(r);
+$likedCardsIDs
+    .on(onLikedCardsUpdated, (likedCardsIDs, newID) => {
+        return likedCardsIDs.find((id) => id === newID) ? likedCardsIDs.filter((id) => id !== newID) : likedCardsIDs.concat(newID);
     })
-    .on(addLikedRoles, (store, value) => store.concat(value))
-    .on(removeLikedRoles, (store, value) => store.filter((id) => id !== value))
-    .reset(resetLikedRoles);
-
-$checkedIDs.watch((el) => console.log('checked:', el));
-$likedIDs.watch((el) => console.log('liked:', el));
-$data.watch((el) => console.log('data:', el));
+    .on(onLikedCardsAdded, (likedCardsIDs, newID) => likedCardsIDs.concat(newID))
+    .on(onLikedCardsRemoved, (likedCardsIDs, removedID) => likedCardsIDs.filter((id) => id !== removedID));
 
 forward({
     from: onFetchLoadingStarted,
@@ -81,11 +81,11 @@ forward({
 })
 
 forward({
-    from: onRemoveCard,
-    to: removeCheckedRoles,
+    from: onCardRemoved,
+    to: onSelectedCardsRemoved,
 })
 
 forward({
-    from: onRemoveCard,
-    to: removeLikedRoles,
+    from: onCardRemoved,
+    to: onLikedCardsRemoved,
 })
