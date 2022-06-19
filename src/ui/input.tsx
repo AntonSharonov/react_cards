@@ -2,9 +2,9 @@ import { ChangeEventHandler, forwardRef } from "react";
 import styled from 'styled-components'
 
 interface IInput {
-    onChange: ChangeEventHandler;
-    value: string;
-    placeholder: string;
+    onChange?: ChangeEventHandler;
+    value?: string;
+    placeholder?: string;
     isDisable?: boolean;
     icon?: JSX.Element;
     iconOnClick?: () => void;

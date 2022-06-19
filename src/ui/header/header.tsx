@@ -7,6 +7,7 @@ import {
     $isFiltered,
     $likedIDs,
     addLikedRoles,
+    onDisplayCreateCardModal,
     onDisplayDeleteModal,
     onFilterChanged,
     onInputSearched,
@@ -26,6 +27,7 @@ import { CrossIcon } from "../icons/crossIcon";
 
 export const Header: FC = () => {
     const isFiltered = useStore($isFiltered);
+    const inputRefMobile = createRef<HTMLInputElement>();
     const inputRef = createRef<HTMLInputElement>();
     const searchValues = useStore($inputSearch);
     const checkedIDs = useStore($checkedIDs);
@@ -69,11 +71,12 @@ export const Header: FC = () => {
         if (checkedIDs.length) onDisplayDeleteModal();
     }
 
+    const handleInputSearchChangeMobile = () => onInputSearched(inputRefMobile.current?.value || '');
     const handleInputSearchChange = () => onInputSearched(inputRef.current?.value || '');
 
     const handleInputSearchReset = () => onSearchReset();
 
-    const handleCreateNewCard = () => alert('Create a New Card');
+    const handleCreateNewCard = () => onDisplayCreateCardModal();
 
     const handleFilterChanged = () => onFilterChanged();
 
@@ -166,8 +169,8 @@ export const Header: FC = () => {
                 <Input isDisable={ !roles.length }
                        placeholder='Search in cards...'
                        value={ searchValues.join(SEARCH_SPACE) }
-                       onChange={ handleInputSearchChange }
-                       ref={ inputRef }
+                       onChange={ handleInputSearchChangeMobile }
+                       ref={ inputRefMobile }
                        iconOnClick={ handleInputSearchReset }
                        icon={ <CrossIcon
                            width={ '16px' }

@@ -1,6 +1,5 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { DEFAULT_IMG_SRC } from "../../assets/const";
 import { Image } from "../image";
 import { Title } from "../title";
 import { Paragraph } from "../paragraph";
@@ -17,6 +16,7 @@ import {
 import { useStore } from "effector-react";
 import { HeartIcon } from "../icons/heartIcon";
 import { TrashIcon } from "../icons/trashIcon";
+import BottleImage from '../images/bottle.png'
 
 interface ICard {
     id: number;
@@ -54,9 +54,7 @@ export const Card: FC<ICard> = ({ id, imageUrl, name, firstBrewed, tagline }) =>
                 />
             </SCell>
             <SCell data-size='medium'>
-                <SImage src={ imageUrl || DEFAULT_IMG_SRC }
-                        alt={ name }
-                />
+                <SImage src={ imageUrl || BottleImage } alt={ name }/>
                 <SButtonsWrapperMobile>
                     <SIconWrapper onClick={ () => updateLikedRoles(id) }>
                         <HeartIcon fill={ isLiked ? '#fb3958' : '#adadad' } width={ '26px' } height={ '26px' }/>

@@ -12,6 +12,7 @@ export const $inputSearch = createStore<string[]>(['']);
 export const $checkedIDs = createStore<number[]>([]);
 export const $likedIDs = createStore<number[]>([]);
 export const $isDisplayDeleteModal = createStore<boolean>(false);
+export const $isDisplayCreateNewCardModal = createStore<boolean>(false);
 
 export const onFetchedFx = createEffect(async () => {
     const res = await fetch(`${ process.env.REACT_APP_PUNK_API_URL }`);
@@ -29,11 +30,14 @@ export const removeCheckedRoles = createEvent<number>();
 export const resetCheckedRoles = createEvent();
 export const onDisplayDeleteModal = createEvent();
 export const onDeleteModalReset = createEvent();
+export const onDisplayCreateCardModal = createEvent();
+export const onCreateCardModalReset = createEvent();
 export const onRemoveCard = createEvent<number>();
 export const updateLikedRoles = createEvent<number>();
 export const addLikedRoles = createEvent<number>();
 export const removeLikedRoles = createEvent<number>();
 export const resetLikedRoles = createEvent();
+export const onCreateNewCard = createEvent<Card>();
 
 $data.on(onFetchedFx.doneData, (_, data) => {
     return data.map((card: Card) => {
@@ -47,11 +51,13 @@ $data.on(onFetchedFx.doneData, (_, data) => {
     })
 }).on(onRemoveCard, (store, value) => store.filter((card) => card.id !== value));
 
+$data.on(onCreateNewCard, (s, v) => s.concat(v));
 $isLoading.on(onFetchLoadingStarted, () => true).reset(onFetchLoadingFinished);
 $isLoadingFinished.on(onFetchLoadingFinished, () => true);
 $isFiltered.on(onFilterChanged, (value) => !value).reset(onFilterReset);
 $inputSearch.on(onInputSearched, (store, value) => value.split(SEARCH_SPACE)).reset(onSearchReset);
 $isDisplayDeleteModal.on(onDisplayDeleteModal, (display) => !display).reset(onDeleteModalReset);
+$isDisplayCreateNewCardModal.on(onDisplayCreateCardModal, (display) => !display).reset(onCreateCardModalReset);
 
 $checkedIDs
     .on(updateCheckedRoles, (s, r) => {

@@ -2,9 +2,10 @@ import { FC } from "react";
 import { NotFound } from "../images/notFound";
 import styled from "styled-components";
 import { Button } from "../button";
+import { onDisplayCreateCardModal } from "../../shared/productCards/model";
 
 export const NothingHere: FC = () => {
-    const handleCreateNewCard = () => alert('Create a New Card');
+    const handleCreateNewCard = () => onDisplayCreateCardModal();
     const handlePageRefresh = () => window.location.reload();
 
     return (
