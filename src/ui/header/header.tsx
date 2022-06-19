@@ -4,19 +4,25 @@ import { Button } from "../button";
 import {
     $checkedIDs, $data,
     $inputSearch,
-    $isFiltered, $likedIDs, addLikedRoles, onDisplayDeleteModal,
+    $isFiltered,
+    $likedIDs,
+    addLikedRoles,
+    onDisplayDeleteModal,
     onFilterChanged,
-    onInputSearched, onRemoveCard,
-    onSearchReset, removeLikedRoles, resetCheckedRoles, updateCheckedRoles, updateLikedRoles
+    onInputSearched,
+    onSearchReset,
+    removeLikedRoles,
+    resetCheckedRoles,
+    updateCheckedRoles
 } from "../../shared/productCards/model";
 import { useStore } from "effector-react";
 import { Input } from "../input";
 import { Paragraph } from "../paragraph";
-import { Title } from "../title";
 import { SEARCH_SPACE } from "../../assets/const";
 import { HeartIcon } from "../icons/heartIcon";
 import { TrashIcon } from "../icons/trashIcon";
 import { BrokenHeartIcon } from "../icons/brokenHeartIcon";
+import { CrossIcon } from "../icons/crossIcon";
 
 export const Header: FC = () => {
     const isFiltered = useStore($isFiltered);
@@ -63,6 +69,13 @@ export const Header: FC = () => {
         if (checkedIDs.length) onDisplayDeleteModal();
     }
 
+    const handleInputSearchChange = () => onInputSearched(inputRef.current?.value || '');
+
+    const handleInputSearchReset = () => onSearchReset();
+
+    const handleAddNewCard = () => alert('Add New Card');
+
+    const handleFilterChanged = () => onFilterChanged();
 
     const contains = (where: number[], what: number[]) => {
         for (let i = 0; i < what.length; i++) {
@@ -85,32 +98,57 @@ export const Header: FC = () => {
                         <Paragraph text={ likedIDs.length.toString() }/>
                         <Paragraph text='items liked'/>
                     </SItems>
-
                 </SItemsWrapper>
-                <Button isDisable={ !Boolean(roles.length) } onClick={ handleCheck } isActive={ checked }
-                        text={ !checked ? 'Select all' : 'Deselect all' }/>
-                <Button isDisable={ true } onClick={ () => onSearchReset() } text='Add new card'/>
-                <Input placeholder='Search in cards...' value={ searchValues.join(SEARCH_SPACE) }
-                       onChange={ () => onInputSearched(inputRef.current?.value || '') }
-                       ref={ inputRef }/>
-                <Button onClick={ () => onSearchReset() } isDisable={ !Boolean(searchValues.join()) }
-                        text='Clear search bar'/>
-                <Button onClick={ () => onFilterChanged() } isActive={ isFiltered } text='FILTER: by likes'/>
+                <Button isDisable={ !roles.length }
+                        onClick={ handleCheck }
+                        isActive={ checked }
+                        text={ !checked ? 'Select all' : 'Deselect all' }
+                />
+                <Button onClick={ handleAddNewCard }
+                        text='Add new card'
+                />
+                <Input isDisable={ !roles.length }
+                       placeholder='Search in cards...'
+                       value={ searchValues.join(SEARCH_SPACE) }
+                       onChange={ handleInputSearchChange }
+                       ref={ inputRef }
+                       iconOnClick={ handleInputSearchReset }
+                       icon={ <CrossIcon
+                           width={ '16px' }
+                           height={ '16px' }
+                           fill={ searchValues.join() ? '#000000' : '#bfbfbf' }/>
+                       }/>
+                <Button onClick={ handleFilterChanged }
+                        isDisable={ !roles.length }
+                        isActive={ isFiltered }
+                        text='FILTER: by liked'
+                />
                 <SIconsWrapper>
                     <SIconWrapper
                         data-active={ !contains(likedIDs, checkedIDs) }
                         onClick={ handleLikeSet }>
-                        <HeartIcon width='26px' height='26px'
-                                   fill={ !contains(likedIDs, checkedIDs) ? '#fb3958' : '#eaeaea' }/>
+                        <HeartIcon width='26px'
+                                   height='26px'
+                                   fill={ !contains(likedIDs, checkedIDs) ? '#fb3958' : '#eaeaea' }
+                        />
                     </SIconWrapper>
-                    <SIconWrapper data-active={ intersection }
-                                  onClick={ handleLikeRemove }>
-                        <BrokenHeartIcon width='26px' height='26px'
-                                         fill={ intersection ? '#adadad' : '#eaeaea' }/>
+                    <SIconWrapper
+                        data-active={ intersection }
+                        onClick={ handleLikeRemove }>
+                        <BrokenHeartIcon
+                            width='26px'
+                            height='26px'
+                            fill={ intersection ? '#adadad' : '#eaeaea' }
+                        />
                     </SIconWrapper>
-                    <SIconWrapper data-active={ Boolean(checkedIDs.length) } onClick={ handleRemove }>
-                        <TrashIcon width='26px' height='26px'
-                                   fill={ Boolean(checkedIDs.length) ? '#fb3958' : '#eaeaea' }/>
+                    <SIconWrapper
+                        data-active={ Boolean(checkedIDs.length) }
+                        onClick={ handleRemove }>
+                        <TrashIcon
+                            width='26px'
+                            height='26px'
+                            fill={ Boolean(checkedIDs.length) ? '#fb3958' : '#eaeaea' }
+                        />
                     </SIconWrapper>
                 </SIconsWrapper>
             </SRow>

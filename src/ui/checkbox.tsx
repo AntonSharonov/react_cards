@@ -46,4 +46,6 @@ const SCheckbox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 26px;
+  height: 26px;
 `;
