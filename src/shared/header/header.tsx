@@ -297,6 +297,8 @@ const SHideIconWrapper = styled.div`
   justify-content: center;
   align-items: center;
   margin: 5px;
+  cursor: pointer;
+  width: 100%;
 
   @media screen and (min-width: 1001px) {
     display: none;

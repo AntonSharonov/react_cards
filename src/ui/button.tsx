@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 interface IButton {
     text: string;
-    onClick: MouseEventHandler;
+    onClick?: MouseEventHandler;
     isActive?: boolean;
     isDisable?: boolean;
 }
@@ -14,6 +14,7 @@ export const Button: FC<IButton> = ({ text, onClick, isActive, isDisable }) => (
 
 const SButton = styled.button`
   cursor: pointer;
+  color: #232633;
   margin: 5px;
   padding: 0 20px 1px;
   height: 40px;
