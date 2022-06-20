@@ -17,14 +17,12 @@ export const CreateNewCardModal: FC = () => {
             }
         })
         id++;
-        const date = data.date.split('-');
-        const firstBrewed = `${ date[1] }/${ date[0] }`;
 
         onNewCardCreated({
             id,
             name: data.name,
             tagline: data.tagline,
-            first_brewed: firstBrewed,
+            first_brewed: `${ data.month }/${ data.year }`,
             image_url: '',
         });
         onCardCreateModalReset();
@@ -38,20 +36,32 @@ export const CreateNewCardModal: FC = () => {
             <SForm onSubmit={ handleSubmit(onSubmit) }>
                 <SInput data-error={ errors.name?.type === 'required' }
                         { ...register('name', { required: true }) }
-                        placeholder='Type card name here'
+                        placeholder='Card name'
                 />
                 <SInput data-error={ errors.tagline?.type === 'required' }
                         { ...register('tagline', { required: true }) }
-                        placeholder='Type tagline here'
+                        placeholder='Tagline'
                 />
-                <SInput data-error={ errors.date?.type === 'required' }
-                        { ...register('date', { required: true }) }
-                        type='date'
-                        placeholder='Type date here'
-                />
+                <SInputDateWrapper>
+                    <SInput
+                        data-error={ errors.month?.type === 'required' || errors.month?.type === 'min' || errors.month?.type === 'max' }
+                        data-content='month'
+                        type='number'
+                        { ...register('month', { required: true, min: 1, max: 12 }) }
+                        placeholder='Month'
+                    />
+                    <SSlash>/</SSlash>
+                    <SInput
+                        data-error={ errors.year?.type === 'required' || errors.year?.type === 'min' || errors.year?.type === 'max' }
+                        data-content='year'
+                        type='number'
+                        { ...register('year', { required: true, min: 1900, max: 2022 }) }
+                        placeholder='Year'
+                    />
+                </SInputDateWrapper>
                 <SButtons>
                     <Button onClick={ handleClose } text='Cancel'/>
-                    <SInput value='Create' type="submit"/>
+                    <Button text='Create'/>
                 </SButtons>
             </SForm>
         </SCreateNewCardModal>
@@ -87,13 +97,14 @@ const SButtons = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 10px;
 `;
 
 const SInput = styled.input`
   display: flex;
-  width: 80%;
+  width: 240px;
   outline: none;
-  margin: 5px;
+  margin: 5px 0;
   padding: 0 20px;
   height: 40px;
   background-color: #fff;
@@ -116,6 +127,14 @@ const SInput = styled.input`
       background-color: #f6f6f6;
     }
   }
+
+  &[data-content='month'] {
+    width: 84px;
+  }
+
+  &[data-content='year'] {
+    width: 84px;
+  }
 `;
 
 const SForm = styled.form`
@@ -124,4 +143,16 @@ const SForm = styled.form`
   width: 100%;
   align-items: center;
   justify-content: center;
+`;
+
+const SInputDateWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const SSlash = styled.p`
+  margin: 0;
+  width: 30px;
 `;
